@@ -1,50 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="12dp">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/hint_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:text="Ilość produktów w kartonie:" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:gravity="center_vertical">
 
         <ImageButton
             android:id="@+id/minus_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@drawable/cnp_transparent_bg"
             android:padding="6dp"
-            app:srcCompat="@drawable/cnp_ic_minus" />
+            android:scaleType="center" />
 
         <EditText
             android:id="@+id/number_et"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
             android:layout_weight="1"
             android:background="@drawable/cnp_transparent_bg"
             android:gravity="center_horizontal|center_vertical"
             android:inputType="numberSigned|number|numberDecimal"
-            android:padding="12dp"
+            android:paddingStart="6dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="12dp"
             android:text="0"
-            android:textSize="24dp" />
+            android:textSize="24dp"
+            android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/plus_btn"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/cnp_transparent_bg"
-            android:padding="6dp"
-            app:srcCompat="@drawable/cnp_ic_plus" />
+            android:padding="6dp" />
+
+        <TextView
+            android:id="@+id/unit_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="0"
+            android:text="szt"
+            android:textSize="18sp"
+            tools:text="szt" />
     </LinearLayout>
 </LinearLayout>

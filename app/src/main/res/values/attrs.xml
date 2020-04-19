@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CountingNumberPicker">
+        <attr name="startValue" format="float" />
+        <attr name="tickValue" format="float" />
+        <attr name="hintText" format="string" />
         <attr name="minusBtnIconDrawable" format="integer" />
-        <attr name="minusBtnBackground" format="integer"/>
-        <attr name="plusDrawable" format="integer" />
-        <attr name="hintTextSize" format="dimension" />
-        <attr name="numberTextSize" format="dimension" />
-        <attr name="backgroundDrawable" format="integer" />
+        <attr name="plusBtnIconDrawable" format="integer" />
+        <attr name="btnsBackgroundDrawable" format="integer" />
+        <attr name="btnsIconTintColor" format="color" />
     </declare-styleable>
 </resources>
