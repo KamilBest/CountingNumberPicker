@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -11,21 +12,21 @@
         android:id="@+id/customView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        custom:btnsBackgroundDrawable="@drawable/oval_btns_drawable"
-        custom:hintText="Test"
-        custom:minusBtnIconDrawable="@drawable/cnp_ic_minus"
-        custom:plusBtnIconDrawable="@drawable/cnp_ic_plus" />
+        android:layout_margin="12dp"
+        custom:btnsBackgroundDrawable="@drawable/v1_button_selector"
+        custom:inputBackgroundDrawable="@drawable/v1_input_bg"
+        custom:minusBtnIconDrawable="@drawable/ic_v1_minus"
+        custom:plusBtnIconDrawable="@drawable/ic_v1_plus"
+        custom:minValue="1"
+        custom:maxValue="10"/>
 
     <com.best.countingnumberpicker.CountingNumberPicker
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_margin="12dp"
         android:layout_marginEnd="12dp"
         custom:btnsBackgroundDrawable="@drawable/red_btns_drawable"
         custom:btnsIconTintColor="#FFDF9E"
-        custom:hintText="Test2"
         custom:minusBtnIconDrawable="@drawable/ic_minus"
         custom:plusBtnIconDrawable="@drawable/ic_plus"
         custom:startValue="21.00"
@@ -34,10 +35,9 @@
     <com.best.countingnumberpicker.CountingNumberPicker
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_margin="12dp"
         android:layout_marginEnd="12dp"
         custom:btnsBackgroundDrawable="@drawable/orange_rectangle_btns_drawable"
-        custom:hintText="Test3"
         custom:minusBtnIconDrawable="@drawable/cnp_ic_minus"
         custom:plusBtnIconDrawable="@drawable/cnp_ic_plus"
         custom:startValue="-5"

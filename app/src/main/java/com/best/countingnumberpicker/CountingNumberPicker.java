@@ -12,22 +12,25 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.widget.ImageViewCompat;
 
 public class CountingNumberPicker extends LinearLayout implements View.OnClickListener {
     private final static float DEFAULT_START_VALUE = 0F;
+    private final static float DEFAULT_MIN_VALUE = -10000F;
+    private final static float DEFAULT_MAX_VALUE = 10000F;
+
     private final static float DEFAULT_TICK_VALUE = 1F;
     private final static int EMPTY = 0;
     private float counterValue = DEFAULT_START_VALUE;
     private float tickValue = DEFAULT_TICK_VALUE;
+    private float minValue, maxValue;
     private CustomClickListener customClickListener;
     private ImageButton minusBtn;
     private ImageButton plusBtn;
-    private TextView hintTV;
-    private EditText numberET;
+    private EditText numberInputET;
+    private TextView unitCodeTV;
 
     public CountingNumberPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -41,50 +44,81 @@ public class CountingNumberPicker extends LinearLayout implements View.OnClickLi
     }
 
     private void initViews() {
-        hintTV = findViewById(R.id.hint_tv);
-        numberET = findViewById(R.id.number_et);
+        numberInputET = findViewById(R.id.number_et);
         setupNumberEditTextChangeListener();
         minusBtn = findViewById(R.id.minus_btn);
         minusBtn.setOnClickListener(this);
         plusBtn = findViewById(R.id.plus_btn);
         plusBtn.setOnClickListener(this);
+        unitCodeTV = findViewById(R.id.unit_code);
     }
 
     private void loadValuesFromAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.CountingNumberPicker, EMPTY, EMPTY);
-        Drawable minusIcon;
-        Drawable plusIcon;
+        Drawable minusIcon, plusIcon;
         int tintColor;
-        Drawable buttonBackground;
-        String hintText;
+        Drawable minusBtnBg, plusBtnBg;
+        Drawable inputBackground;
+        boolean shouldShowUnitCode;
+        String unitCode;
 
         try {
             counterValue = typedArray.getFloat(R.styleable.CountingNumberPicker_startValue, DEFAULT_START_VALUE);
             tickValue = typedArray.getFloat(R.styleable.CountingNumberPicker_tickValue, DEFAULT_TICK_VALUE);
-
+            minValue = typedArray.getFloat(R.styleable.CountingNumberPicker_minValue, DEFAULT_START_VALUE);
+            maxValue = typedArray.getFloat(R.styleable.CountingNumberPicker_maxValue, DEFAULT_MAX_VALUE);
+            shouldShowUnitCode = typedArray.getBoolean(R.styleable.CountingNumberPicker_showUnitCode, false);
+            unitCode = typedArray.getString(R.styleable.CountingNumberPicker_unitCode);
             minusIcon = typedArray.getDrawable(R.styleable.CountingNumberPicker_minusBtnIconDrawable);
             plusIcon = typedArray.getDrawable(R.styleable.CountingNumberPicker_plusBtnIconDrawable);
             tintColor = typedArray.getColor(R.styleable.CountingNumberPicker_btnsIconTintColor, EMPTY);
-            buttonBackground = typedArray.getDrawable(R.styleable.CountingNumberPicker_btnsBackgroundDrawable);
-            hintText = typedArray.getString(R.styleable.CountingNumberPicker_hintText);
+            minusBtnBg = typedArray.getDrawable(R.styleable.CountingNumberPicker_btnsBackgroundDrawable);
+            plusBtnBg = typedArray.getDrawable(R.styleable.CountingNumberPicker_btnsBackgroundDrawable);
+            inputBackground = typedArray.getDrawable(R.styleable.CountingNumberPicker_inputBackgroundDrawable);
         } finally {
             typedArray.recycle();
         }
+        if (shouldShowUnitCode)
+            showUnitCode(unitCode);
         setCounterValue(counterValue);
         setMinusBtnIcon(minusIcon);
         setPlusBtnIcon(plusIcon);
         setIconsTint(tintColor, minusIcon, plusIcon);
-        setBtnsBackground(buttonBackground);
-        setHintText(hintText);
+        setBtnsBackground(minusBtnBg, plusBtnBg);
+        setInputBackground(inputBackground);
+    }
+
+    private void showUnitCode(String unitCode) {
+        if (unitCodeTV != null && unitCode != null && !TextUtils.isEmpty(unitCode)) {
+            unitCodeTV.setVisibility(VISIBLE);
+            unitCodeTV.setText(unitCode);
+        }
     }
 
     private void setCounterValue(float counterValue) {
-        numberET.setText(String.valueOf(counterValue));
+
+        if (numberInputET != null)
+            numberInputET.setText(String.valueOf(counterValue));
     }
 
+    private void setButtonsEnability() {
+        enableButtons(true);
+        if (counterValue >= maxValue) {
+            plusBtn.setEnabled(false);
+            return;
+        } else if (counterValue <= minValue) {
+            minusBtn.setEnabled(false);
+            return;
+        }
+    }
+
+    private void enableButtons(boolean enable) {
+        plusBtn.setEnabled(enable);
+        minusBtn.setEnabled(enable);
+    }
 
     private void setupNumberEditTextChangeListener() {
-        numberET.addTextChangedListener(new TextWatcher() {
+        numberInputET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -97,19 +131,42 @@ public class CountingNumberPicker extends LinearLayout implements View.OnClickLi
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && !TextUtils.isEmpty(s.toString()))
+                if (s != null && !TextUtils.isEmpty(s.toString()) && areNumbersValid(counterValue)) {
                     parseValue(s.toString());
-                else
+                    setButtonsEnability();
+                } else {
                     setCounterValue(DEFAULT_START_VALUE);
+                    setCursorOnInputEnd();
+                }
             }
         });
+    }
+
+    private boolean areNumbersValid(float inputValue) {
+        if (minValue == 0f && maxValue == 0f)
+        {
+            if (inputValue >= minValue && inputValue <= maxValue)
+                return true;
+        }
+        else
+        if (inputValue >= DEFAULT_MIN_VALUE && inputValue <= DEFAULT_MAX_VALUE)
+            return true;
+
+        Toast.makeText(getContext(), "Niepoprawna wartość, ustawiono wartość domyślną.", Toast.LENGTH_LONG).show();
+        return false;
+    }
+
+    private void setCursorOnInputEnd() {
+        if (numberInputET != null) {
+            numberInputET.setSelection(numberInputET.length());
+        }
     }
 
     private void parseValue(String value) {
         try {
             counterValue = Float.parseFloat(value);
         } catch (NumberFormatException nfe) {
-            numberET.setError("Dane wejściowe nie są liczbą");
+            numberInputET.setError("Dane wejściowe nie są liczbą");
         }
     }
 
@@ -119,6 +176,8 @@ public class CountingNumberPicker extends LinearLayout implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
+        setButtonsEnability();
+
         if (view == minusBtn) {
             if (customClickListener != null)
                 customClickListener.onMinusClick();
@@ -129,6 +188,7 @@ public class CountingNumberPicker extends LinearLayout implements View.OnClickLi
             counterValue += tickValue;
         }
         setCounterValue(counterValue);
+        setCursorOnInputEnd();
     }
 
     public Drawable getMinusBtnIcon() {
@@ -163,21 +223,19 @@ public class CountingNumberPicker extends LinearLayout implements View.OnClickLi
         ImageViewCompat.setImageTintList(plusBtn, null);
     }
 
-    public Drawable getBtnsBackround() {
-        return plusBtn.getBackground();
+    public void setBtnsBackground(Drawable minusBtnBg, Drawable plusBtnBg) {
+        setButtonBackground(minusBtn, minusBtnBg);
+        setButtonBackground(plusBtn, plusBtnBg);
     }
 
-    public void setBtnsBackground(Drawable btnsBackgroundDrawable) {
-        minusBtn.setBackground(btnsBackgroundDrawable);
-        plusBtn.setBackground(btnsBackgroundDrawable);
+    private void setButtonBackground(ImageButton button, Drawable bgDrawable) {
+        if (button != null) {
+            button.setBackground(bgDrawable);
+        }
     }
 
-    public String getHintText() {
-        return hintTV.getText().toString();
-    }
-
-    public void setHintText(String text) {
-        if (text != null && !TextUtils.isEmpty(text))
-            hintTV.setText(text);
+    public void setInputBackground(Drawable bgDrawable) {
+        if (numberInputET != null)
+            numberInputET.setBackground(bgDrawable);
     }
 }

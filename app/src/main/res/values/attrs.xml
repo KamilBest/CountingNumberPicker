@@ -3,10 +3,14 @@
     <declare-styleable name="CountingNumberPicker">
         <attr name="startValue" format="float" />
         <attr name="tickValue" format="float" />
-        <attr name="hintText" format="string" />
+        <attr name="showUnitCode" format="boolean" />
+        <attr name="unitCode" format="string" />
+        <attr name="minValue" format="float" />
+        <attr name="maxValue" format="float" />
         <attr name="minusBtnIconDrawable" format="integer" />
         <attr name="plusBtnIconDrawable" format="integer" />
         <attr name="btnsBackgroundDrawable" format="integer" />
         <attr name="btnsIconTintColor" format="color" />
+        <attr name="inputBackgroundDrawable" format="integer" />
     </declare-styleable>
 </resources>

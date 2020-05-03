@@ -2,6 +2,14 @@
 <resources>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorAccent">#5C0DE5</color>
     <color name="black">#000000</color>
+
+    <color name="background_color">#F1F1F6</color>
+
+    <color name="v1_color">#5C0DE5</color>
+    <color name="v1_pressed_color">#1E0052</color>
+    <color name="v1_disabled_color">#A8A8A8</color>
+    <color name="v1_ripple">#7323FF</color>
+
 </resources>
